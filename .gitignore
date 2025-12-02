@@ -1,0 +1,14 @@
+# Build and dist files
+/build
+/dist
+/*.exe
+# Dev files
+/env
+/*.spec
+# AppImage
+/Image
+/*.ico
+# Data Files
+/*.dat
+# Cache File
+/Cache
