@@ -39,7 +39,7 @@ Resource_struct['Resource'][0] = {
     'steel': 0,                 # 钢
     'coal': 0,                  # 煤
     'paragonXP': 0,             # 研发点
-    'recruitment_points': 0,    #社区点
+    'recruitment_points': 0,    # 社区代币
 }
 
 
