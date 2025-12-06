@@ -1,12 +1,5 @@
 try:
-    import time
-    from datetime import datetime
-    #import constants
-    #import utils
-    #import dataHub
-    #import events
-    #import devmenu
-    import json     # only json.loads(s) can be used and will changed to utils.jsonDncode(s)
+    import json
 except:
 	pass
 
@@ -75,6 +68,7 @@ while(i<count):
 print(Resource_Data)
 
 '''
+一些Main.py中用来调试的代码,用于收集wows中的SFM事件名称和数据
 with open('SFMevent.txt','a') as file:
         file.write("Name: %s \n Data: %s \n"%(eventName,eventData))
         file.close()

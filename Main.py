@@ -62,7 +62,7 @@ def read_resourceData(eventName = 'eventName',eventData = None):
                 resStatistics_update()
                 res_Upgrade_Flag = False
 
-    if False:# eventName in ev_entity:
+    if False:# eventName in ev_entity: # 之前利用SFM事件记录各项资源信息的代码,由于可以使用ev***Changed处理,此部分以弃用
         entity_Id = constants.UiComponents.accountResource
         Resource_struct['Resource'][0]['Time'] = int(time.time())
         Resource_struct['Resource'][0]['gold'] = entity[entity_Id].gold if entity[entity_Id] else 0
@@ -79,7 +79,7 @@ def read_resourceData(eventName = 'eventName',eventData = None):
         if (isrelpay != 0):     # 播放replay文件时也会获取一次各项资源,但返回空值所以若各项资源总和为0则认为是在播放replay文件,不进行记录 
             resStatistics_update()
 
-def Load_resevent(*args, **kwargs):
+def Load_resevent(*args, **kwargs): # 用于监听各项资源变化
     entity_Id = constants.UiComponents.accountResource
     entity[entity_Id].evChangedGold.add(read_resourceData_ResChanged)
     entity[entity_Id].evChangedCredit.add(read_resourceData_ResChanged)
@@ -90,7 +90,7 @@ def Load_resevent(*args, **kwargs):
     entity[entity_Id].evChangedRecruitmentPoints.add(read_resourceData_ResChanged)
     entity[entity_Id].evChangedParagonXP.add(read_resourceData_ResChanged)
 
-def remove_resevent(*args, **kwargs):
+def remove_resevent(*args, **kwargs): # 用于移除监听各项资源变化
     entity_Id = constants.UiComponents.accountResource
     entity[entity_Id].evChangedGold.remove(read_resourceData_ResChanged)
     entity[entity_Id].evChangedCredit.remove(read_resourceData_ResChanged)
@@ -148,7 +148,7 @@ def resStatistics_update():
             file.close()
 
 
-devmenu.enable() #测试菜单,便于在不重启游戏的情况下重载mod
+# devmenu.enable() #测试菜单,便于在不重启游戏的情况下重载mod
 
 # events.onSFMEvent(Load_PlayerData)
 # events.onBattleQuit(read_resourceData_BattleQuit)
