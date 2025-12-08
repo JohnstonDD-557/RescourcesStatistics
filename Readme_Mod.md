@@ -57,7 +57,7 @@ And you will see such a window:\
 Choose the name you want to see, then click the 'generate', you will see the following statistical chart in browser.\
 ![Preview_plot](https://raw.githubusercontent.com/JohnstonDD-557/johnston_dd557.github.io/refs/heads/main/1/Preview_plot_EN.png)
 
-**Note: Due to the storage of every record in '[Player Name].dat', it is necessary to move the '[Player Name].dat' in the mod folder to the corresponding folder of the new version each time the game is updated (usually, the entire folder can be directly moved to the new version), otherwise the previously stored data will be lost**
+**Note: Due to the storage of every record in '[Player Name].dat', it is necessary to move the '[Player Name].dat' in the mod folder to the corresponding folder of the new version each time the game is updated (usually, the entire folder can be directly moved to the new version), otherwise the previously stored data will be lost.**
 
 ## Uninstallation
 

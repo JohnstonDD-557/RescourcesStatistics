@@ -10,7 +10,7 @@ DataCharts_EN.py:```DataCharts.py```的英文版
 
 ## 环境安装方式
 
-1. 解压缩后在对应路径调出命令行(在地址栏输cmd)\
+1. 解压缩后在对应路径调出命令行(在地址栏输cmd)
 2. 输入 ```py -3.10 -m venv env && env\Scripts\activate.bat```
 3. 输入 ```pip install -r requirements.txt``` 安装环境
 4. 安装完成,可以在配置完脚本开头的路径之后直接双击 ```DataCharts.py``` 来进行测试了。
