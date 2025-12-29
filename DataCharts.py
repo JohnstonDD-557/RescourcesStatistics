@@ -570,11 +570,11 @@ def Data_Update(resource_Name):
     return None
 
 if __name__ == "__main__":
-    Data_Update('Johnston_DD_557.dat')
+    #Data_Update('Johnston_DD_557.dat')
 
-    #root = tk.Tk()
-    #app = DatFileViewer(root)
-    #root.mainloop()
+    root = tk.Tk()
+    app = DatFileViewer(root)
+    root.mainloop()
 
     # print('输入你的玩家名:\n')
     # FileName = input() + '.dat'
