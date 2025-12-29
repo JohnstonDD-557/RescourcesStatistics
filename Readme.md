@@ -17,6 +17,7 @@ DataCharts_EN.py:```DataCharts.py```的英文版
 
 ## 存储信息结构
 
+旧式dat格式:
 dat文件中是以 ```#```为分割符的json格式数据,其中包含了
 ```Time```获取资源数据时的UNIX时间戳,
 ```gold```达布隆,
@@ -26,4 +27,20 @@ dat文件中是以 ```#```为分割符的json格式数据,其中包含了
 ```steel```钢,
 ```coal```煤,
 ```paragonXP```研发点,
-```recruitment_points```社区代币;8项数据,可以参考[```read.py```](./read.py)中的方式来进行读取。
+```recruitment_points```社区代币;9项数据,可以参考[```read.py```](./read.py)中的方式来进行读取。
+
+新式dat格式:
+dat文件中为9个uint64一组的二进制数据,分别按顺序对应下列
+```Time```获取资源数据时的UNIX时间戳,
+```gold```达布隆,
+```credits```银币,
+```freeXP```全局,
+```eliteXP```舰长经验,
+```steel```钢,
+```coal```煤,
+```paragonXP```研发点,
+```recruitment_points```社区代币;9项数据
+
+## 更新日志
+
+2025/12/29 更新了dat文件的存储结构,json->bytes;同时提供了转换旧格式的功能以及导出csv格式的功能。

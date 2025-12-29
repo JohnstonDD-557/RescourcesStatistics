@@ -14,6 +14,8 @@
 
 [https://pan.baidu.com/s/1VfzsP6P-FkrNF5HC40kwHg?pwd=RESS] 提取码: RESS
 
+源代码:[https://github.com/JohnstonDD-557/RescourcesStatistics]
+
 ## 使用方式
 
 在安装完mod后,打开游戏 让任意一项资源的数量发生变动, 就会在[mod文件夹]'./World_of_Warships/bin/[最大数字]/res_mods/PnFMods/RescourcesStatistics/'中看到自动生成的'[玩家名称].dat'文件,此时启动mod文件夹中如下图所示的'DataCharts.exe'。![Preview_Open](https://raw.githubusercontent.com/JohnstonDD-557/johnston_dd557.github.io/refs/heads/main/1/Preview_Open.png)
@@ -29,6 +31,8 @@
 1. 删除'./World_of_Warships/bin/[最大数字]/res_mods/PnFMods/RescourcesStatistics'文件夹即可。
 
 ## 更新日志
+
+2025/12/29 更新了dat文件的存储结构,json->bytes;同时提供了转换旧格式的功能以及导出csv格式的功能。
 
 ## Description
 
@@ -48,6 +52,8 @@ This mod can regularly record various resources in the game (such as Steel, Coal
 
 [https://drive.google.com/drive/folders/106XPH0mJ9hFt6mwXCj47km3x9uPehapN?usp=sharing]
 
+Source Code:[https://github.com/JohnstonDD-557/RescourcesStatistics]
+
 ## Usage
 
 After installing the mod, open the game to change the quantity of any resource. You will see the automatically generated '[Player Name].dat' file in the [mod folder]'./World_of_Warships/bin/[Maximum Number]/reshmods/PnFMods/ResurcesStatistics/'. At this point, start the 'DataCharts_EN.exe' in the mod folder as shown in the following image:\
@@ -66,3 +72,5 @@ Choose the name you want to see, then click the 'generate', you will see the fol
 2. Delete the folder called 'RescourcesStatistics'
 
 ## Update
+
+2025/12/29 Updated the storage structure of the dat file, json->bytes; It also provides the function of converting old formats and exporting CSV format.

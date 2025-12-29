@@ -10,5 +10,8 @@
 /*.ico
 # Data Files
 /*.dat
+/*.bak
+/*.csv
 # Cache File
 /Cache
+/__pycache__

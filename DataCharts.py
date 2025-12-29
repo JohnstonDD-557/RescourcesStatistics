@@ -6,6 +6,8 @@ from plotly.subplots import make_subplots
 import pandas as pd
 from typing import List, Dict, Any
 import json
+from struct import unpack, pack
+import csv
 
 import os
 import tkinter as tk
@@ -311,6 +313,8 @@ class DatFileViewer:
         'choose': '选择需要查看的玩家',
         'refresh': '刷新列表',
         'generate': '生成图像',
+        'generateCSV': '转换CSV文件',
+        'UpdateDat': '更新旧式dat文件',
         'warning': '提示',
         'warning_str': '没有找到\'[Player Name].dat\'文件,请先启动游戏进行一次战斗或开启一次补给箱',
         'error': '错误',
@@ -344,11 +348,17 @@ class DatFileViewer:
         self.file_combo.bind('<<ComboboxSelected>>')
         
         # 刷新按钮
-        ttk.Button(main_frame, text=self.text_str['refresh'], command=self.load_dat_files).grid(row=0, column=2, padx=(5, 0), pady=5)
+        ttk.Button(main_frame, text=self.text_str['refresh'], command=self.load_dat_files).grid(row=0, column=3, padx=(5, 0), pady=5)
 
         # 加载图标按钮
-        ttk.Button(main_frame, text=self.text_str['generate'], command=self.GenerateCharts).grid(row=5, column=2, padx=(5, 0), pady=5)
+        ttk.Button(main_frame, text=self.text_str['generate'], command=self.GenerateCharts).grid(row=5, column=3, padx=(5, 0), pady=5)
         
+        # 转换CSV文件按钮
+        ttk.Button(main_frame, text=self.text_str['generateCSV'], command=self.GenerateCSV).grid(row=5, column=2, padx=(5, 0), pady=5)
+        
+        # 更新旧式dat文件按钮
+        ttk.Button(main_frame, text=self.text_str['UpdateDat'], command=self.UpdateDat).grid(row=5, column=0, padx=(5, 0), pady=5)
+
         # 配置网格权重
         main_frame.columnconfigure(1, weight=1)
         main_frame.rowconfigure(2, weight=1)
@@ -380,11 +390,19 @@ class DatFileViewer:
         selected = self.selected_file.get()
         interactive_visualization_example(selected)
 
+    def GenerateCSV(self):
+        selected = self.selected_file.get()
+        Data2CSV(selected)
+
+    def UpdateDat(self):
+        selected = self.selected_file.get()
+        Data_Update(selected)
+
 
 # 使用交互式图表示例
 def interactive_visualization_example(FileName,LimtimeMin = 0,LimtimeMax = 999999999999):
     # 读取数据数据
-    Resource_Data = Data_Read(FileName,LimtimeMin,LimtimeMax)
+    Resource_Data = dataRead_bytes(FileName,LimtimeMin,LimtimeMax)
     # print(Resource_Data)
     
     # 创建交互式可视化工具
@@ -439,10 +457,118 @@ def Data_Read(FileName,limtimeMin = 0,limtimeMax = 9999999999):
                         pass
     return records
 
+def dataRead_bytes(FileName,limtimeMin = 0,limtimeMax = 9999999999):
+    ######################################################################
+    # 二进制文件结构(数值均以大端序存储):
+    # Time: 8字节 (64位整数) unix时间戳
+    # gold: 8字节 (64位整数)
+    # credits: 8字节 (64位整数)
+    # freeXP: 8字节 (64位整数)
+    # eliteXP: 8字节 (64位整数)
+    # steel: 8字节 (64位整数)
+    # coal: 8字节 (64位整数)
+    # paragonXP: 8字节 (64位整数)
+    # recruitment_points: 8字节 (64位整数)
+    ######################################################################
+    record_size = 8 * 9  # 每条记录的字节数
+    records = []
+    with open(FileName, 'rb') as f:
+        while True:
+            bytes_data = f.read(record_size)
+            if not bytes_data or len(bytes_data) < record_size:
+                break
+            
+            # 解包数据
+            unpacked_data = unpack('>QQQQQQQQQ', bytes_data)
+            record = {
+                'Time': unpacked_data[0],
+                'gold': unpacked_data[1],
+                'credits': unpacked_data[2],
+                'freeXP': unpacked_data[3],
+                'eliteXP': unpacked_data[4],
+                'steel': unpacked_data[5],
+                'coal': unpacked_data[6],
+                'paragonXP': unpacked_data[7],
+                'recruitment_points': unpacked_data[8],
+            }
+            
+            if (record['Time'] <= limtimeMax):
+                records.append(record)
+            if (record['Time'] <= limtimeMin):
+                return records
+    return records
+
+def Data2CSV(resource_Name):
+    output_file = resource_Name.replace('.dat', '.csv')
+    if not resource_Name:
+        # print("No data to write.")
+        return
+    resource_data = dataRead_bytes(resource_Name)
+    # 获取字段名
+    fieldnames = resource_data[0].keys()
+    
+    with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        
+        writer.writeheader()
+        for data in resource_data:
+            writer.writerow(data)
+
+def Data_Update(resource_Name):
+    ######################################################################
+    # 旧式文本文件结构(json格式)(每行以#分隔):
+    # Time: unix时间戳
+    # gold: 达布隆
+    # credits: 银币
+    # freeXP: 全局
+    # eliteXP: 舰长经验
+    # steel: 钢
+    # coal: 煤
+    # paragonXP: 研发点
+    # recruitment_points: 社区点
+    ######################################################################
+    records = []
+    with open(resource_Name, 'r', encoding='utf-8') as f:
+        # 对旧文件做备份
+        f_bak = open(resource_Name + '.bak', 'w', encoding='utf-8')
+        f_bak.write(f.read())
+        f_bak.close()
+        f.seek(0)
+        
+        for chuck in f:
+            lines = chuck.split('#')
+            for line in reversed(lines[1:]):
+                line = line.strip()
+                if line:
+                    try:
+                        record = json.loads(line)
+                        records.append(record)
+                    except json.JSONDecodeError:
+                        pass
+    # 写入二进制文件
+    output_file = resource_Name
+    with open(output_file, 'wb') as f:
+        for record in records:
+            packed_data = pack('>QQQQQQQQQ',
+                                 record['Time'],
+                                 record['gold'],
+                                 record['credits'],
+                                 record['freeXP'],
+                                 record['eliteXP'],
+                                 record['steel'],
+                                 record['coal'],
+                                 record['paragonXP'],
+                                 record['recruitment_points'])
+            f.write(packed_data)
+    return None
+
 if __name__ == "__main__":
+    #Data_Update('LSOP.dat')
+
     root = tk.Tk()
     app = DatFileViewer(root)
     root.mainloop()
+
     # print('输入你的玩家名:\n')
     # FileName = input() + '.dat'
 
