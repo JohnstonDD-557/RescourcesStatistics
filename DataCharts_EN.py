@@ -343,7 +343,7 @@ class DatFileViewer:
         
         self.selected_file = tk.StringVar()
         self.file_combo = ttk.Combobox(main_frame, textvariable=self.selected_file, state="readonly")
-        self.file_combo.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=5, padx=(5, 0))
+        self.file_combo.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=5, padx=(5, 0))
         self.file_combo.bind('<<ComboboxSelected>>')
         
         # 刷新按钮
@@ -526,23 +526,29 @@ def Data_Update(resource_Name):
     # recruitment_points: 社区点
     ######################################################################
     records = []
-    with open(resource_Name, 'r', encoding='utf-8') as f:
-        # 对旧文件做备份
-        f_bak = open(resource_Name + '.bak', 'w', encoding='utf-8')
-        f_bak.write(f.read())
-        f_bak.close()
-        f.seek(0)
-        
-        for chuck in f:
-            lines = chuck.split('#')
-            for line in reversed(lines[1:]):
-                line = line.strip()
-                if line:
-                    try:
-                        record = json.loads(line)
-                        records.append(record)
-                    except json.JSONDecodeError:
-                        pass
+    try:
+        with open(resource_Name, 'r', encoding='utf-8') as f:
+            if (f.read(1) == '#'): # 文件以#开头，说明格式为旧格式，需要更新
+                f.seek(0)
+                # 对旧文件做备份
+                f_bak = open(resource_Name + '.bak', 'w', encoding='utf-8')
+                f_bak.write(f.read())
+                f_bak.close()
+                f.seek(0)
+                for chuck in f:
+                    lines = chuck.split('#')
+                    for line in reversed(lines[1:]):
+                        line = line.strip()
+                        if line:
+                            try:
+                                record = json.loads(line)
+                                records.append(record)
+                            except json.JSONDecodeError:
+                                pass
+            else:
+                return None  # 文件格式已是新格式，无需更新
+    except UnicodeDecodeError:
+        return None  # 文件格式已是新格式，无需更新
     # 写入二进制文件
     output_file = resource_Name
     with open(output_file, 'wb') as f:
